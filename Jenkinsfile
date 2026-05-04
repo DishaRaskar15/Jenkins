@@ -1,30 +1,27 @@
 pipeline {
     agent any
 
-    environment {
-        DEPLOY_DIR = "/var/www/html"
-    }
-
     stages {
-
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/DishaRaskar15/Jenkins.git'
-            }
-        }
 
         stage('Build') {
             steps {
-                echo "No build step (static project assumed)"
+                echo 'No build needed for HTML project'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Checking if index.html exists'
+                bat 'if exist index.html (echo File exists) else (exit 1)'
             }
         }
 
         stage('Deploy') {
             steps {
-                sh '''
-                mkdir -p /var/www/html
-                rm -rf /var/www/html/*
-                cp -r * /var/www/html/
+                echo 'Deploying to XAMPP htdocs'
+                bat '''
+                if not exist C:\\xampp\\htdocs mkdir C:\\xampp\\htdocs
+                xcopy * C:\\xampp\\htdocs\\ /E /H /C /I /Y
                 '''
             }
         }
